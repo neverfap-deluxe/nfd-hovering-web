@@ -6,12 +6,33 @@
     <main class="hovering__main">
       <div class="hovering__main__hero">
 
-        <!-- HOVERING BUTTON -->
-        <!-- <canvas id="hovering__button__container" class="hovering__button__container">
-          
-        </canvas> -->
+        <!-- INFORMATION CONTAINER -->
+        <div>
 
+        </div>
+        <div class="hovering__information__container">
+          <div class="hovering__state__container">
+            <div id="hovering__state--app" class="hovering__state">INITIAL</div>
+            <div id="hovering__state--button" class="hovering__state">false</div>
+          </div>
+    
+          <div class="hovering__timer__container">
+            <div id="hovering__timer" class="hovering__timer">0:00</div>
+          </div>
+  
+          <div class="hovering__legend__container">
+            <div class="hovering__legend">Press space to start session.</div>
+          </div>      
+        </div>
+          
+        <!-- HOVERING BUTTON -->
         <div class="hovering__center">
+          <div class="hovering__toast__container">
+            <div id="hovering__toast__text" class="hovering__toast__text">
+
+            </div>
+          </div>
+
           <div id="hovering__button__container" class="hovering__button__container">
             <div id="hovering__button" class="hovering__button">
             </div>  
@@ -25,22 +46,10 @@
             </div>
           </div>
         </div>
-                  
-        <!-- INFORMATION CONTAINER -->
-        <div class="hovering__information__container">
-          <div class="hovering__state__container">
-            <div id="hovering__state--app" class="hovering__state">INITIAL</div>
-            <div id="hovering__state--button" class="hovering__state">false</div>
-          </div>
-    
-          <div class="hovering__timer__container">
-            <div id="hovering__timer" class="hovering__timer">0:00</div>
-          </div>
-  
-          <div class="hovering__legend__container">
-            <div class="hovering__legend">Press Enter to start session.</div>
-          </div>      
-        </div>
+              
+        <!-- WHAT IS HOVERING? -->
+        
+
       </div>
     </main>
   </body>
@@ -68,6 +77,9 @@
     var APP_MODE_TIMER = 'TIMER';
 
     var INITIAL_SCALE_STATE = 0.06;
+    var END_SCALE_STATE = 1;
+    var SCALE_RATE = 0.0001;
+    
 
     // state
     var appState = APP_STATE_INITIAL; // initial, started, ended
@@ -84,12 +96,13 @@
 
     // events
     document.addEventListener('keydown', function(event) {
-      if (event.keyCode === 13) whenPressEnterKey();
+      if (event.keyCode === 13) whenPressspaceKey();
+      if (event.keyCode === 32) whenPressspaceKey();
     }, false);
     hovering__button__container.onmouseover = whenMouseOverButton;
     hovering__button__container.onmouseout = whenMouseOutButton;
     
-    function whenPressEnterKey(event) {
+    function whenPressspaceKey(event) {
       switch(appState) {
         case APP_STATE_INITIAL: {
           if (appHover !== true) return;
@@ -110,7 +123,7 @@
           // if (appHover !== true) return;
           setInnerText(
             hovering__message, 
-            '<p>Your session has ended. Press enter to restart and try again!</p>' +
+            '<p>Your session has ended. Press space to restart and try again!</p>' +
             '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
           );
 
@@ -144,7 +157,7 @@
         case APP_STATE_INITIAL: {
           setInnerText(
             hovering__message,
-            '<p>Press enter to start hovering.</p>'
+            '<p>Press space to start hovering.</p>'
           );
           break;
         }
@@ -154,9 +167,11 @@
           clearInterval(sizeSetInterval);
           setInnerText(
             hovering__message,
-            '<p>Your session has ended. Press enter to restart and try again!</p>' +
+            '<p>Your session has ended. Press space to restart and try again!</p>' +
             '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
           );
+          timer = 0;
+          setInnerText(hovering__timer, fancyTimeFormat(0))
           setAppState(APP_STATE_ENDED);
           break;
         }
@@ -188,15 +203,13 @@
           clearInterval(sizeSetInterval);
           setInnerText(
             hovering__message,
-            '<p>Your session has ended. Press enter to restart and try again!</p>' + 
+            '<p>Your session has ended. Press space to restart and try again!</p>' + 
             '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
           );
           setAppState(APP_STATE_ENDED);
           break;
         }
         case APP_STATE_ENDED: {
-
-
           break;
         }
         default: {
@@ -219,22 +232,19 @@
     }
 
     function increaseSize(event) {      
-      console.log(scaleState)
-      console.log(increasingScale)
-      if (increasingScale && scaleState < 1.6) {
-        console.log('happ')
-        hovering__button.style.transform = 'scale(' + (scaleState + 0.0001) + ')';
-        scaleState += 0.0001;
+      if (increasingScale && scaleState < END_SCALE_STATE) {
+        hovering__button.style.transform = 'scale(' + (scaleState + SCALE_RATE) + ')';
+        scaleState += SCALE_RATE;
       } 
-      if (increasingScale && scaleState > 1.6) {
+      if (increasingScale && scaleState > END_SCALE_STATE) {
         increasingScale = false;
       }
 
-      if (!increasingScale && scaleState > 1) {
-        hovering__button.style.transform = 'scale(' + (scaleState - 0.0001) + ')';
-        scaleState -= 0.00001;
+      if (!increasingScale && scaleState > INITIAL_SCALE_STATE) {
+        hovering__button.style.transform = 'scale(' + (scaleState - SCALE_RATE) + ')';
+        scaleState -= SCALE_RATE;
       }
-      if (!increasingScale && scaleState < 1) {
+      if (!increasingScale && scaleState < INITIAL_SCALE_STATE) {
         increasingScale = true;
       }
     }
@@ -245,46 +255,18 @@
 
     function setAppState(state) {
       appState = state;
-      hovering__stateAPP.textContent = state;
+      hovering__stateAPP.textContent = 'App: ' + state;
     };
 
     function setHoverState(state) {
       appHover = state;
-      hovering__stateBUTTON.textContent = state;
+      hovering__stateBUTTON.textContent = 'Hovering: ' + state;
     };
     
   </script>
 
   <!-- util.js -->
   <script>
-    // (function() {
-    //   var canvas = document.getElementById('hovering__button__container');
-    //   var context = canvas.getContext('2d');
-
-    //   // resize the canvas to fill browser window dynamically
-    //   window.addEventListener('resize', resizeCanvas, false);
-
-    //   function resizeCanvas() {
-    //     canvas.width = window.innerWidth;
-    //     canvas.height = window.innerHeight;
-
-    //     /**
-    //     * Your drawings need to be inside this function otherwise they will be reset when 
-    //     * you resize the browser window and the canvas goes will be cleared.
-    //     */
-    //     drawStuff(); 
-    //   }
-    //   resizeCanvas();
-
-    //   function drawStuff() {
-    //     context.beginPath();
-    //     context.arc(75.5, 75.5, 50.5, 0, Math.PI * 2, true); // Outer circle
-    //     context.stroke();
-    //   }
-    // })();
-
-
-
     function fancyTimeFormat(time) {
       // Hours, minutes and seconds
       var hrs = ~~(time / 3600);
@@ -305,20 +287,3 @@
   </script>
 </html>
 
-div
-
-
-<!--
-// var someone__to__talk__to = document.querySelector('#someone__to__talk__to');
-// var need__a__community__to__join = document.querySelector('#need__a__community__to__join');
-// var mental__health__services = document.querySelector('#mental__health__services');
-
-// someone__to__talk__to.onclick = function(event) {
-
-// };
-// need__a__community__to__join.onclick = function(event) {
-
-// };
-// mental__health__services.onclick = function(event) {
-
-// }; -->

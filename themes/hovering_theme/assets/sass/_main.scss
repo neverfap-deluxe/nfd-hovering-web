@@ -9,12 +9,23 @@ a {
 }
 
 body {
-  position: relative;
+  // display: flex;
   width: 100%;
   box-sizing: border-box;
-  // border: 5px solid black;
+  border-top: 5px solid $black-background;
+  border-bottom: 5px solid $black-background;
+  border-left: 5px solid $black-background;
+  border-right: 5px solid $black-background;
   margin: 0!important;
   background: rgb(253, 253, 253);
+  position: relative;
+  height: initial!important;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 h1 {
@@ -188,4 +199,20 @@ hr {
 
 .contact__form__title-thing:hover {
   color: lighten(rgba(255,46,182,1), 10%);
+}
+
+
+@media screen and (min-width: 420px) {
+  body {
+    margin: 0.5rem!important;
+    width: initial;
+  }
+
+  .em-white_check_mark {
+    display: inline-block!important;
+  }
+
+  .em-rainbow {
+    display: inline-block;
+  }
 }
