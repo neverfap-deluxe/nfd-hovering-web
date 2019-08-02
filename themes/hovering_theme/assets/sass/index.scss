@@ -27,20 +27,21 @@
 // @import "_shortcodes.scss";
 
 .hovering__main {
-
+  .hovering__main__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  
+    width: 100vw;
+    height: 100vh;
+  
+    position: relative;
+  }  
 }
 
-.hovering__main__hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  width: 100vw;
-  height: 100vh;
-
-  position: relative;
-
+// HOVERING BUTTON
+.hovering__button__container {
   .hovering__button {
     cursor: default;
     border: 4px solid black;
@@ -49,10 +50,17 @@
   .hovering__button--during {
 
   }
+}
 
+// HOVERING MESSAGE
+.hovering__message__container {
   .hovering__message {
     opacity: 1;
+    transition: .2s;
+  }
 
+  .hovering__message__secondary {
+    opacity: 0;
     transition: .2s;
   }
 
@@ -60,14 +68,18 @@
     // opacity: 1!important;  
     
     transition: .2s;    
-  }
+  }  
 }
 
 
+// HOVERING INFORMATION
 .hovering__information__container {
   position: absolute;
   left: 0;
   bottom: 0;
+
+  background: lightgrey;
+  border: 4px solid cyan;
 
   .hovering__legend__container {
 
