@@ -5,23 +5,32 @@
     <!-- MAIN -->
     <main class="hovering__main">
       <div class="hovering__main__hero">
+
         <!-- HOVERING BUTTON -->
-        <div class="hovering__button__container">
-          <div id="hovering__button" class="hovering__button">
-            hover.
+        <!-- <canvas id="hovering__button__container" class="hovering__button__container">
+          
+        </canvas> -->
+
+        <div class="hovering__center">
+          <div id="hovering__button__container" class="hovering__button__container">
+            <div id="hovering__button" class="hovering__button">
+              <div id="hovering__button__text" class="hovering__button__text">hover</div>
+            </div>  
+          </div>
+
+          <!-- HOVERING MESSAGE -->
+          <div class="hovering__message__container">
+            <div id="hovering__message" class="hovering__message">
+              <p>Hover on the button to begin.</p>
+            </div>
           </div>
         </div>
-
-        <!-- HOVERING MESSAGE -->
-        <div class="hovering__message__container">
-          <div id="hovering__message" class="hovering__message">Hover on the button to begin.</div>
-          <div id="hovering__message__secondary" class="hovering__message__secondary"></div>    
-        </div>
-
+                  
         <!-- INFORMATION CONTAINER -->
         <div class="hovering__information__container">
           <div class="hovering__state__container">
-            <div id="hovering__state" class="hovering__state">INITIAL</div>
+            <div id="hovering__state--app" class="hovering__state">INITIAL</div>
+            <div id="hovering__state--button" class="hovering__state">false</div>
           </div>
     
           <div class="hovering__timer__container">
@@ -29,7 +38,6 @@
           </div>
   
           <div class="hovering__legend__container">
-            <div class="hovering__legend">Press Enter to start session.</div>
             <div class="hovering__legend">Press Enter to start session.</div>
           </div>      
         </div>
@@ -43,11 +51,14 @@
     // Timed. Non-timed. 
 
     // selectors
+    var hovering__button__container = document.querySelector('#hovering__button__container');
+    var hovering__button__text = document.querySelector('#hovering__button__text');
     var hovering__button = document.querySelector('#hovering__button');
     var hovering__message = document.querySelector('#hovering__message');
     var hovering__message__secondary = document.querySelector('#hovering__message__secondary');
     var hovering__timer = document.querySelector('#hovering__timer');
-    var hovering__state = document.querySelector('#hovering__state');
+    var hovering__stateAPP = document.querySelector('#hovering__state--app');
+    var hovering__stateBUTTON = document.querySelector('#hovering__state--button');
 
     var APP_STATE_INITIAL = 'INITIAL';
     var APP_STATE_STARTED = 'STARTED';
@@ -59,54 +70,60 @@
     // state
     var appState = APP_STATE_INITIAL; // initial, started, ended
     var appMode = APP_MODE_STANDARD;
-
-    var isButtonHovered = false;
+    var appHover = false;
 
     var timer = 0;
     var timerSetInterval = null;
+    var sizeSetInterval = null;
+
+    // scale state
+    var scaleState = 1.00;
+    var increasingScale = true;
 
     // events
     document.addEventListener('keydown', function(event) {
       if (event.keyCode === 13) whenPressEnterKey();
     }, false);
-    hovering__button.onmouseover = whenMouseOverButton;
-    hovering__button.onmouseout = whenMouseOutButton;
+    hovering__button__container.onmouseover = whenMouseOverButton;
+    hovering__button__container.onmouseout = whenMouseOutButton;
     
     function whenPressEnterKey(event) {
       switch(appState) {
         case APP_STATE_INITIAL: {
-          if (isButtonHovered !== true) return;
+          if (appHover !== true) return;
         
           timerSetInterval = setInterval(startTimer, 1000);
-          // removeClass(hovering__message, 'hovering__message--active');
-          setText(
+          sizeSetInterval = setInterval(increaseSize, 100);
+
+          setInnerText(
             hovering__message, 
-            'Leave your cursor within the hover space, with your hand still attached.'
+            '<p>Leave your cursor within the hover space, with your hand still attached.</p>' +
+            '<p>I recommend you practice for 10 minutes at a time.</p>'
           );
-          setText(
-            hovering__message__secondary, 
-            'I recommend you practice for 10 minutes at a time.'
-          );
-          setAppState(APP_STATE_STARTED);
-        
+
+          setAppState(APP_STATE_STARTED);        
           break;
         }
         case APP_STATE_STARTED: {
-          if (isButtonHovered !== true) return;
-          setText(
+          // if (appHover !== true) return;
+          setInnerText(
             hovering__message, 
-            'Your session has ended. Press enter to restart and try again!'
+            '<p>Your session has ended. Press enter to restart and try again!</p>' +
+            '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
           );
-          setText(
-            hovering__message__secondary, 
-            'You hovered for ' + fancyTimeFormat(timer)
-          );
+
           clearInterval(timerSetInterval); 
+          clearInterval(sizeSetInterval);
+
           setAppState(APP_STATE_ENDED);
           break;
         }
         case APP_STATE_ENDED: {
-          // if (isButtonHovered !== true) return;
+          // if (appHover !== true) return;
+          setInnerText(
+            hovering__message, 
+            '<p>Hover on the button to begin.</p>'
+          );
 
           setAppState(APP_STATE_INITIAL);
           break;
@@ -118,37 +135,32 @@
     }
 
     function whenMouseOverButton(event) {
-      isButtonHovered = true;
+      setHoverState(true)
+      addClass(hovering__button__text, 'hovering__button__text--during');
 
       switch(appState) {
         case APP_STATE_INITIAL: {
-          setText(
+          setInnerText(
             hovering__message,
-            'Press enter to start hovering.'
+            '<p>Press enter to start hovering.</p>'
           );
-          addClass(hovering__message, 'hovering__message--active');
-          addClass(hovering__message__secondary, 'hovering__message--active');
           break;
         }
         case APP_STATE_STARTED: {
           // This ends the game.
           clearInterval(timerSetInterval);
-          setText(
+          clearInterval(sizeSetInterval);
+          setInnerText(
             hovering__message,
-            'Your session has ended. Press enter to restart and try again!'
-          );
-          setText(
-            hovering__message__secondary, 
-            'You hovered for ' + fancyTimeFormat(timer),
+            '<p>Your session has ended. Press enter to restart and try again!</p>' +
+            '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
           );
           setAppState(APP_STATE_ENDED);
           break;
         }
         case APP_STATE_ENDED: {
-          // setText(
-          //   hovering__message,
-          //   'Press enter to start hovering.'
-          // );
+          hovering__button.style.transform = 'scale(1.00)';
+          scaleState = 1.00;
           break;
         }
         default: {
@@ -158,22 +170,23 @@
     }
 
     function whenMouseOutButton(event) {
-      isButtonHovered = false;
+      setHoverState(false)
+      removeClass(hovering__button__text, 'hovering__button__text--during');
 
       switch(appState) {
         case APP_STATE_INITIAL: {
-          setText(
+          setInnerText(
             hovering__message,
-            'Hover on the button to begin.'
+            '<p>Hover on the button to begin.</p>'
           );
-          removeClass(hovering__message, 'hovering__message--active');
           break;
         }
         case APP_STATE_STARTED: {
           clearInterval(timerSetInterval);
-          setText(
+          clearInterval(sizeSetInterval);
+          setInnerText(
             hovering__message,
-            'Your session has ended. Press enter to restart and try again!'
+            '<p>Your session has ended. Press enter to restart and try again!</p>'
           );
           setAppState(APP_STATE_ENDED);
           break;
@@ -199,22 +212,75 @@
 
     function startTimer(event) {
       timer += 1;
-      setText(hovering__timer, fancyTimeFormat(timer))
+      setInnerText(hovering__timer, fancyTimeFormat(timer))
     }
 
-    function setText(element, text) {
-      element.textContent = text;
+    function increaseSize(event) {      
+      console.log(scaleState)
+      console.log(increasingScale)
+      if (increasingScale && scaleState < 1.6) {
+        console.log('happ')
+        hovering__button.style.transform = 'scale(' + (scaleState + 0.005) + ')';
+        scaleState += 0.005;
+      } 
+      if (increasingScale && scaleState > 1.6) {
+        increasingScale = false;
+      }
+
+      if (!increasingScale && scaleState > 1) {
+        hovering__button.style.transform = 'scale(' + (scaleState - 0.005) + ')';
+        scaleState -= 0.005;
+      }
+      if (!increasingScale && scaleState < 1) {
+        increasingScale = true;
+      }
+    }
+
+    function setInnerText(element, text) {
+      element.innerHTML = text;
     }
 
     function setAppState(state) {
       appState = state;
-      hovering__state.textContent = state;
+      hovering__stateAPP.textContent = state;
     };
+
+    function setHoverState(state) {
+      appHover = state;
+      hovering__stateBUTTON.textContent = state;
+    };
+    
   </script>
 
   <!-- util.js -->
   <script>
-    
+    // (function() {
+    //   var canvas = document.getElementById('hovering__button__container');
+    //   var context = canvas.getContext('2d');
+
+    //   // resize the canvas to fill browser window dynamically
+    //   window.addEventListener('resize', resizeCanvas, false);
+
+    //   function resizeCanvas() {
+    //     canvas.width = window.innerWidth;
+    //     canvas.height = window.innerHeight;
+
+    //     /**
+    //     * Your drawings need to be inside this function otherwise they will be reset when 
+    //     * you resize the browser window and the canvas goes will be cleared.
+    //     */
+    //     drawStuff(); 
+    //   }
+    //   resizeCanvas();
+
+    //   function drawStuff() {
+    //     context.beginPath();
+    //     context.arc(75.5, 75.5, 50.5, 0, Math.PI * 2, true); // Outer circle
+    //     context.stroke();
+    //   }
+    // })();
+
+
 
     function fancyTimeFormat(time) {
       // Hours, minutes and seconds
