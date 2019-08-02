@@ -8,22 +8,28 @@
 
         <!-- INFORMATION CONTAINER -->
         <div>
-
-        </div>
-        <div class="hovering__information__container">
-          <div class="hovering__state__container">
-            <div id="hovering__state--app" class="hovering__state">INITIAL</div>
-            <div id="hovering__state--button" class="hovering__state">false</div>
+          <div id="mobile__menu__overlay__button__id" class="mobile__menu__overlay__button">
+            <span class="mobile__span"></span>
+            <span class="mobile__span"></span>
+            <span class="mobile__span"></span>
           </div>
+            
+          <div class="hovering__information__container">
+            <div class="hovering__state__container">
+              <div id="hovering__state--app" class="hovering__state">INITIAL</div>
+              <div id="hovering__state--button" class="hovering__state">false</div>
+            </div>
+      
+            <div class="hovering__timer__container">
+              <div id="hovering__timer" class="hovering__timer">0:00</div>
+            </div>
     
-          <div class="hovering__timer__container">
-            <div id="hovering__timer" class="hovering__timer">0:00</div>
-          </div>
-  
-          <div class="hovering__legend__container">
-            <div class="hovering__legend">Press space to start session.</div>
+            <!-- <div class="hovering__legend__container">
+              <div class="hovering__legend">Press space to start session.</div>
+            </div>       -->
           </div>      
         </div>
+
           
         <!-- HOVERING BUTTON -->
         <div class="hovering__center">
@@ -48,7 +54,7 @@
         </div>
               
         <!-- WHAT IS HOVERING? -->
-        
+
 
       </div>
     </main>
@@ -79,7 +85,6 @@
     var INITIAL_SCALE_STATE = 0.06;
     var END_SCALE_STATE = 1;
     var SCALE_RATE = 0.0001;
-    
 
     // state
     var appState = APP_STATE_INITIAL; // initial, started, ended
@@ -96,8 +101,9 @@
 
     // events
     document.addEventListener('keydown', function(event) {
+      
       if (event.keyCode === 13) whenPressspaceKey();
-      if (event.keyCode === 32) whenPressspaceKey();
+      if (event.keyCode === 32) event.preventDefault(); whenPressspaceKey();
     }, false);
     hovering__button__container.onmouseover = whenMouseOverButton;
     hovering__button__container.onmouseout = whenMouseOutButton;
@@ -112,7 +118,7 @@
 
           setInnerText(
             hovering__message, 
-            '<p>Leave your cursor within the hover space, with your hand still attached.</p>' +
+            '<p>Leave your cursor stationary within the circle, with your hand still attached.</p>' +
             '<p>I recommend you practice for 10 minutes at a time.</p>'
           );
 
@@ -121,26 +127,11 @@
         }
         case APP_STATE_STARTED: {
           // if (appHover !== true) return;
-          setInnerText(
-            hovering__message, 
-            '<p>Your session has ended. Press space to restart and try again!</p>' +
-            '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
-          );
-
-          clearInterval(timerSetInterval); 
-          clearInterval(sizeSetInterval);
-
-          setAppState(APP_STATE_ENDED);
+          endHovering();
           break;
         }
         case APP_STATE_ENDED: {
-          // if (appHover !== true) return;
-          setInnerText(
-            hovering__message, 
-            '<p>Hover on the button to begin.</p>'
-          );
-
-          setAppState(APP_STATE_INITIAL);
+          resetHovering();
           break;
         }
         default: {
@@ -162,22 +153,11 @@
           break;
         }
         case APP_STATE_STARTED: {
-          // This ends the game.
-          clearInterval(timerSetInterval);
-          clearInterval(sizeSetInterval);
-          setInnerText(
-            hovering__message,
-            '<p>Your session has ended. Press space to restart and try again!</p>' +
-            '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
-          );
-          timer = 0;
-          setInnerText(hovering__timer, fancyTimeFormat(0))
-          setAppState(APP_STATE_ENDED);
+          endHovering();
           break;
         }
         case APP_STATE_ENDED: {
-          hovering__button.style.transform = 'scale(' + INITIAL_SCALE_STATE + ')';
-          scaleState = INITIAL_SCALE_STATE;
+          resetHovering();
           break;
         }
         default: {
@@ -199,17 +179,11 @@
           break;
         }
         case APP_STATE_STARTED: {
-          clearInterval(timerSetInterval);
-          clearInterval(sizeSetInterval);
-          setInnerText(
-            hovering__message,
-            '<p>Your session has ended. Press space to restart and try again!</p>' + 
-            '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
-          );
-          setAppState(APP_STATE_ENDED);
+          endHovering();
           break;
         }
         case APP_STATE_ENDED: {
+          resetHovering();
           break;
         }
         default: {
@@ -217,18 +191,48 @@
         }
       }
     }
+
+    function endHovering() {
+      setInnerText(
+        hovering__message,
+        '<p>Your session has ended. Press space to restart and try again!</p>' +
+        '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
+      );
+      timer = 0;
+      setInnerText(hovering__timer, fancyTimeFormat(0))
+
+      clearInterval(timerSetInterval);
+      clearInterval(sizeSetInterval);
+
+      setAppState(APP_STATE_ENDED);
+    }
+
+    function resetHovering() {
+      if (appHover === true) {
+        setInnerText(
+          hovering__message, 
+          '<p>Press space to start hovering.</p>'
+        );
+      } else {
+        setInnerText(
+          hovering__message, 
+          '<p>Hover on the button to begin.</p>'
+        );
+      }
+
+      hovering__button.style.transform = 'scale(' + INITIAL_SCALE_STATE + ')';
+      scaleState = INITIAL_SCALE_STATE;
+
+      setAppState(APP_STATE_INITIAL);
+    }
  
-    function addClass(element, className) {
-      element.classList.add(className);
-    };
-
-    function removeClass(element, className) {
-      element.classList.remove(className);
-    };
-
     function startTimer(event) {
       timer += 1;
       setInnerText(hovering__timer, fancyTimeFormat(timer))
+      
+      if (timer % 60) {
+        
+      }
     }
 
     function increaseSize(event) {      
@@ -249,10 +253,6 @@
       }
     }
 
-    function setInnerText(element, text) {
-      element.innerHTML = text;
-    }
-
     function setAppState(state) {
       appState = state;
       hovering__stateAPP.textContent = 'App: ' + state;
@@ -267,6 +267,19 @@
 
   <!-- util.js -->
   <script>
+
+    function addClass(element, className) {
+      element.classList.add(className);
+    };
+
+    function removeClass(element, className) {
+      element.classList.remove(className);
+    };
+
+    function setInnerText(element, text) {
+      element.innerHTML = text;
+    }
+
     function fancyTimeFormat(time) {
       // Hours, minutes and seconds
       var hrs = ~~(time / 3600);
@@ -285,5 +298,15 @@
       return ret;
     }
   </script>
+
+
+  <!-- <script>
+    overlay__button.onclick = function(event) {
+      overlayState = true;
+      overlay.style.display = 'block';
+      overlay__background.style.display = 'block';
+      // overlay__background__colour.style.background = 'lightgrey';
+    }
+  </script> -->
 </html>
 
