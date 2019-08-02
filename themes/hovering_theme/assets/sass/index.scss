@@ -69,23 +69,27 @@
     color: white;
   
     border-radius: 50%;
-    width: 50px;
-    height: 50px;  
+    width: 1000px;
+    height: 1000px;  
+
+    transform: scale(0.06);
   }
 
   .hovering__button {
 
   }
-
-  .hovering__button__text {
-
-  }
-
-  .hovering__button__text--during {
-    opacity: 0;
-    transition: .2s;    
-  }
 }
+
+.hovering__button__text {
+  position: absolute;
+  color: white;
+}
+
+.hovering__button__text--during {
+  opacity: 0;
+  transition: .2s;    
+}
+
 
 .hovering__center {
   position: relative;

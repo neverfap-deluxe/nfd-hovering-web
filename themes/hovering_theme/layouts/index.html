@@ -14,8 +14,8 @@
         <div class="hovering__center">
           <div id="hovering__button__container" class="hovering__button__container">
             <div id="hovering__button" class="hovering__button">
-              <div id="hovering__button__text" class="hovering__button__text">hover</div>
             </div>  
+            <div id="hovering__button__text" class="hovering__button__text">hover</div>
           </div>
 
           <!-- HOVERING MESSAGE -->
@@ -67,6 +67,8 @@
     var APP_MODE_STANDARD = 'STANDARD';
     var APP_MODE_TIMER = 'TIMER';
 
+    var INITIAL_SCALE_STATE = 0.06;
+
     // state
     var appState = APP_STATE_INITIAL; // initial, started, ended
     var appMode = APP_MODE_STANDARD;
@@ -77,7 +79,7 @@
     var sizeSetInterval = null;
 
     // scale state
-    var scaleState = 1.00;
+    var scaleState = INITIAL_SCALE_STATE;
     var increasingScale = true;
 
     // events
@@ -159,8 +161,8 @@
           break;
         }
         case APP_STATE_ENDED: {
-          hovering__button.style.transform = 'scale(1.00)';
-          scaleState = 1.00;
+          hovering__button.style.transform = 'scale(' + INITIAL_SCALE_STATE + ')';
+          scaleState = INITIAL_SCALE_STATE;
           break;
         }
         default: {
@@ -186,7 +188,8 @@
           clearInterval(sizeSetInterval);
           setInnerText(
             hovering__message,
-            '<p>Your session has ended. Press enter to restart and try again!</p>'
+            '<p>Your session has ended. Press enter to restart and try again!</p>' + 
+            '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
           );
           setAppState(APP_STATE_ENDED);
           break;
@@ -220,16 +223,16 @@
       console.log(increasingScale)
       if (increasingScale && scaleState < 1.6) {
         console.log('happ')
-        hovering__button.style.transform = 'scale(' + (scaleState + 0.005) + ')';
-        scaleState += 0.005;
+        hovering__button.style.transform = 'scale(' + (scaleState + 0.0001) + ')';
+        scaleState += 0.0001;
       } 
       if (increasingScale && scaleState > 1.6) {
         increasingScale = false;
       }
 
       if (!increasingScale && scaleState > 1) {
-        hovering__button.style.transform = 'scale(' + (scaleState - 0.005) + ')';
-        scaleState -= 0.005;
+        hovering__button.style.transform = 'scale(' + (scaleState - 0.0001) + ')';
+        scaleState -= 0.00001;
       }
       if (!increasingScale && scaleState < 1) {
         increasingScale = true;
