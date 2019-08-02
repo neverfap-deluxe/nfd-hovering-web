@@ -11,14 +11,19 @@
         </div>
 
         <!-- HOVERING MESSAGE -->
-        <div id="hovering__message" class="hovering__message">
-
+        <div class="hovering__message__container">
+          <div id="hovering__message" class="hovering__message">Hover on the button to begin.</div>
+          <div id="hovering__message__secondary" class="hovering__message__secondary"></div>    
         </div>
 
         <!-- INFORMATION CONTAINER -->
         <div class="hovering__information__container">
+          <div class="hovering__state__container">
+            <div id="hovering__state" class="hovering__state">INITIAL</div>
+          </div>
+    
           <div class="hovering__timer__container">
-            <div class="hovering__timer">0:00</div>
+            <div id="hovering__timer" class="hovering__timer">0:00</div>
           </div>
   
           <div class="hovering__legend__container">
@@ -38,23 +43,194 @@
     // selectors
     var hovering__button = document.querySelector('#hovering__button');
     var hovering__message = document.querySelector('#hovering__message');
+    var hovering__message__secondary = document.querySelector('#hovering__message__secondary');
+    var hovering__timer = document.querySelector('#hovering__timer');
+    var hovering__state = document.querySelector('#hovering__state');
+
+    var APP_STATE_INITIAL = 'INITIAL';
+    var APP_STATE_STARTED = 'STARTED';
+    var APP_STATE_ENDED = 'ENDED';
+
+    var APP_MODE_STANDARD = 'STANDARD';
+    var APP_MODE_TIMER = 'TIMER';
 
     // state
-    var hovering__state = 'initial'; // initial, started, ended
+    var appState = APP_STATE_INITIAL; // initial, started, ended
+    var appMode = APP_MODE_STANDARD;
+
+    var isButtonHovered = false;
+
+    var timer = 0;
+    var timerSetInterval = null;
 
     // events
-    hovering__button.onmouseover = function(event) {
+    document.addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) whenPressEnterKey();
+    }, false);
+    hovering__button.onmouseover = whenMouseOverButton;
+    hovering__button.onmouseout = whenMouseOutButton;
+    
+    function whenPressEnterKey(event) {
+      switch(appState) {
+        case APP_STATE_INITIAL: {
+          if (isButtonHovered !== true) return;
+        
+          timerSetInterval = setInterval(startTimer, 1000);
+          // removeClass(hovering__message, 'hovering__message--active');
+          setText(
+            hovering__message, 
+            'Leave your cursor within the hover space, with your hand still attached.'
+          );
+          setText(
+            hovering__message__secondary, 
+            'I recommend you practice for 10 minutes at a time.'
+          );
+          setAppState(APP_STATE_STARTED);
+        
+          break;
+        }
+        case APP_STATE_STARTED: {
+          if (isButtonHovered !== true) return;
+          setText(
+            hovering__message, 
+            'Your session has ended. Press enter to restart and try again!'
+          );
+          setText(
+            hovering__message__secondary, 
+            'You hovered for ' + fancyTimeFormat(timer)
+          );
+          clearInterval(timerSetInterval); 
+          setAppState(APP_STATE_ENDED);
+          break;
+        }
+        case APP_STATE_ENDED: {
+          // if (isButtonHovered !== true) return;
 
-      if (hovering__state === 'initial') {
-        hovering__message.classList.add('hovering__message--active')
-        hovering__message.textContent = "";
+          setAppState(APP_STATE_INITIAL);
+          break;
+        }
+        default: {
+          throw new Error('whenMouseOutButton - appState incorrect');
+        }
       }
     }
 
-    hovering__button.onmouseout = function(event) {
-      hovering__message.classList.remove('hovering__message--active')
+    function whenMouseOverButton(event) {
+      isButtonHovered = true;
+
+      switch(appState) {
+        case APP_STATE_INITIAL: {
+          setText(
+            hovering__message,
+            'Press enter to start hovering.'
+          );
+          addClass(hovering__message, 'hovering__message--active');
+          addClass(hovering__message__secondary, 'hovering__message--active');
+          break;
+        }
+        case APP_STATE_STARTED: {
+          // This ends the game.
+          clearInterval(timerSetInterval);
+          setText(
+            hovering__message,
+            'Your session has ended. Press enter to restart and try again!'
+          );
+          setText(
+            hovering__message__secondary, 
+            'You hovered for ' + fancyTimeFormat(timer),
+          );
+          setAppState(APP_STATE_ENDED);
+          break;
+        }
+        case APP_STATE_ENDED: {
+          // setText(
+          //   hovering__message,
+          //   'Press enter to start hovering.'
+          // );
+          break;
+        }
+        default: {
+          throw new Error('whenMouseOverButton - appState incorrect');
+        }
+      }
     }
 
+    function whenMouseOutButton(event) {
+      isButtonHovered = false;
+
+      switch(appState) {
+        case APP_STATE_INITIAL: {
+          setText(
+            hovering__message,
+            'Hover on the button to begin.'
+          );
+          removeClass(hovering__message, 'hovering__message--active');
+          break;
+        }
+        case APP_STATE_STARTED: {
+          clearInterval(timerSetInterval);
+          setText(
+            hovering__message,
+            'Your session has ended. Press enter to restart and try again!'
+          );
+          setAppState(APP_STATE_ENDED);
+          break;
+        }
+        case APP_STATE_ENDED: {
+
+
+          break;
+        }
+        default: {
+          throw new Error('whenMouseOutButton - appState incorrect');
+        }
+      }
+    }
+ 
+    function addClass(element, className) {
+      element.classList.add(className);
+    };
+
+    function removeClass(element, className) {
+      element.classList.remove(className);
+    };
+
+    function startTimer(event) {
+      timer += 1;
+      setText(hovering__timer, fancyTimeFormat(timer))
+    }
+
+    function setText(element, text) {
+      element.textContent = text;
+    }
+
+    function setAppState(state) {
+      appState = state;
+      hovering__state.textContent = state;
+    };
+  </script>
+
+  <!-- util.js -->
+  <script>
+    
+
+    function fancyTimeFormat(time) {
+      // Hours, minutes and seconds
+      var hrs = ~~(time / 3600);
+      var mins = ~~((time % 3600) / 60);
+      var secs = ~~time % 60;
+
+      // Output like "1:01" or "4:03:59" or "123:03:59"
+      var ret = "";
+
+      if (hrs > 0) {
+          ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+      }
+
+      ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+      ret += "" + secs;
+      return ret;
+    }
   </script>
 </html>
 

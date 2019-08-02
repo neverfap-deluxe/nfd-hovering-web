@@ -32,6 +32,7 @@
 
 .hovering__main__hero {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 
@@ -50,11 +51,15 @@
   }
 
   .hovering__message {
+    opacity: 1;
 
+    transition: .2s;
   }
 
   .hovering__message--active {
+    // opacity: 1!important;  
     
+    transition: .2s;    
   }
 }
 
