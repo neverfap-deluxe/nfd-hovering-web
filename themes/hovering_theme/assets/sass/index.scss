@@ -1,0 +1,79 @@
+@import "_global.scss";
+@import "_main.scss";
+@import "_banner.scss";
+@import "_plyr.scss";
+
+// // templates
+// @import "_header.scss";
+// @import "_account_info.scss";
+// @import "_box_info.scss";
+// @import "_breadcrumbs.scss";
+// @import "_footer.scss";
+
+// // pages
+// @import "_homepage.scss";
+// @import "_courses.scss";
+// @import "_single.scss";
+// @import "_page.scss";
+
+// // components
+// @import "_posts.scss";
+// @import "_five_principles.scss";
+// @import "_button.scss";
+
+// // miscellaneous
+// @import "_javascript.scss";
+// @import "_form.scss";
+// @import "_shortcodes.scss";
+
+.hovering__main {
+
+}
+
+.hovering__main__hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  position: relative;
+
+  .hovering__button {
+    cursor: default;
+    border: 4px solid black;
+  }
+
+  .hovering__button--during {
+
+  }
+
+  .hovering__message {
+
+  }
+
+  .hovering__message--active {
+    
+  }
+}
+
+
+.hovering__information__container {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  .hovering__legend__container {
+
+    .hovering__legend {
+      
+    }
+  }
+
+  .hovering__timer__container {
+
+    .hovering__timer {
+    }
+  }
+}

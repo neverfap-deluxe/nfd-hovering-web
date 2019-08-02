@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  {{ partial "head.html" . }}
+  <body>
+    <!-- MAIN -->
+    <main class="hovering__main">
+      <div class="hovering__main__hero">
+        <!-- HOVERING BUTTON -->
+        <div id="hovering__button" class="hovering__button">
+          hover.
+        </div>
+
+        <!-- HOVERING MESSAGE -->
+        <div id="hovering__message" class="hovering__message">
+
+        </div>
+
+        <!-- INFORMATION CONTAINER -->
+        <div class="hovering__information__container">
+          <div class="hovering__timer__container">
+            <div class="hovering__timer">0:00</div>
+          </div>
+  
+          <div class="hovering__legend__container">
+            <div class="hovering__legend">Press Enter to start session.</div>
+            <div class="hovering__legend">Press Enter to start session.</div>
+          </div>      
+        </div>
+      </div>
+    </main>
+  </body>
+
+  <script>
+    // hovering tally. 
+    // You can input a time. 
+    // Timed. Non-timed. 
+
+    // selectors
+    var hovering__button = document.querySelector('#hovering__button');
+    var hovering__message = document.querySelector('#hovering__message');
+
+    // state
+    var hovering__state = 'initial'; // initial, started, ended
+
+    // events
+    hovering__button.onmouseover = function(event) {
+
+      if (hovering__state === 'initial') {
+        hovering__message.classList.add('hovering__message--active')
+        hovering__message.textContent = "";
+      }
+    }
+
+    hovering__button.onmouseout = function(event) {
+      hovering__message.classList.remove('hovering__message--active')
+    }
+
+  </script>
+</html>
+
+div
+
+
+<!--
+// var someone__to__talk__to = document.querySelector('#someone__to__talk__to');
+// var need__a__community__to__join = document.querySelector('#need__a__community__to__join');
+// var mental__health__services = document.querySelector('#mental__health__services');
+
+// someone__to__talk__to.onclick = function(event) {
+
+// };
+// need__a__community__to__join.onclick = function(event) {
+
+// };
+// mental__health__services.onclick = function(event) {
+
+// }; -->
