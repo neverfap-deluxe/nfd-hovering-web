@@ -133,25 +133,44 @@
 
 // HOVERING INFORMATION
 .hovering__information__container {
-  width: 200px;
+  width: 140px;
   position: absolute;
-  right: 2rem;
-  top: 1rem;
+  right: 2.2rem;
+  top: 0.6rem;
+
+  font-size: 0.7rem;
 
   // background: lightgrey;
-  border: 4px solid cyan;
-  padding: 1rem;
+  // border: 4px solid cyan;
+  padding-left: 1rem;
+  padding-right: 1rem;
 
-  .hovering__legend__container {
-
-    .hovering__legend {
-      
-    }
+  h4 {
+    margin: 0.2rem!important;
+    text-decoration: underline;
   }
 
   .hovering__timer__container {
 
     .hovering__timer {
     }
+  }
+}
+
+.hovering__state {
+  padding: 0.4rem;
+}
+
+.hovering__state--selected {
+  border: 2px solid black;
+}
+
+
+.hovering__what__is__container {
+  position: absolute;
+  bottom: 1rem;
+  right: 2.2rem;
+
+  .hovering__what__is {
   }
 }

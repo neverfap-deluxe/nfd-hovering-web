@@ -1,4 +1,4 @@
-# NeverFap Deluxe Emergency
+# NeverFap Deluxe Hovering
 
 Website: https://hovering.neverfapdeluxe.com/
 

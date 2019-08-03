@@ -14,19 +14,23 @@
             <span class="mobile__span"></span>
           </div>
             
-          <div class="hovering__information__container">
+          <div class="articles__link hovering__information__container">
             <div class="hovering__state__container">
-              <div id="hovering__state--app" class="hovering__state">INITIAL</div>
-              <div id="hovering__state--button" class="hovering__state">false</div>
+              <h4>State</h4>
+              <div class="hovering__state--app"> 
+                <div id="hovering__state--app--initial" class="hovering__state hovering__state--selected">Initial</div>
+                <div id="hovering__state--app--started" class="hovering__state">Started</div>
+                <div id="hovering__state--app--ended" class="hovering__state">Completed</div>
+              </div>
+              
+              <h4>Hover State</h4>
+              <div id="hovering__state--button" class="hovering__state">Not Hovering</div>
+
+              <h4>Timer</h4>
+              <div class="hovering__timer__container hovering__state">
+                <div id="hovering__timer" class="hovering__timer">0:00</div>
+              </div>    
             </div>
-      
-            <div class="hovering__timer__container">
-              <div id="hovering__timer" class="hovering__timer">0:00</div>
-            </div>
-    
-            <!-- <div class="hovering__legend__container">
-              <div class="hovering__legend">Press space to start session.</div>
-            </div>       -->
           </div>      
         </div>
 
@@ -54,7 +58,11 @@
         </div>
               
         <!-- WHAT IS HOVERING? -->
-
+        <!-- <div class="hovering__what__is__container">
+          <div id="hovering__what__is" class="hovering__what__is">
+            <a href="https://neverfapdeluxe.com/" class="articles__link">What is Hovering?</a>
+          </div>
+        </div> -->
 
       </div>
     </main>
@@ -74,6 +82,10 @@
     var hovering__timer = document.querySelector('#hovering__timer');
     var hovering__stateAPP = document.querySelector('#hovering__state--app');
     var hovering__stateBUTTON = document.querySelector('#hovering__state--button');
+
+    var hovering__stateAppInitial = document.querySelector('#hovering__state--app--initial');
+    var hovering__stateAppStarted = document.querySelector('#hovering__state--app--started');
+    var hovering__stateAppEnded = document.querySelector('#hovering__state--app--ended');
 
     var APP_STATE_INITIAL = 'INITIAL';
     var APP_STATE_STARTED = 'STARTED';
@@ -144,6 +156,7 @@
       setHoverState(true)
       addClass(hovering__button__text, 'hovering__button__text--during');
 
+      
       switch(appState) {
         case APP_STATE_INITIAL: {
           setInnerText(
@@ -157,7 +170,8 @@
           break;
         }
         case APP_STATE_ENDED: {
-          resetHovering();
+          hovering__button.style.transform = 'scale(' + INITIAL_SCALE_STATE + ')';
+          scaleState = INITIAL_SCALE_STATE;
           break;
         }
         default: {
@@ -183,7 +197,8 @@
           break;
         }
         case APP_STATE_ENDED: {
-          resetHovering();
+          hovering__button.style.transform = 'scale(' + INITIAL_SCALE_STATE + ')';
+          scaleState = INITIAL_SCALE_STATE;
           break;
         }
         default: {
@@ -255,12 +270,35 @@
 
     function setAppState(state) {
       appState = state;
-      hovering__stateAPP.textContent = 'App: ' + state;
+
+      switch(state) {
+        case APP_STATE_INITIAL: {
+          addClass(hovering__stateAppInitial, 'hovering__state--selected');
+          removeClass(hovering__stateAppStarted, 'hovering__state--selected');          
+          removeClass(hovering__stateAppEnded, 'hovering__state--selected');
+          break;
+        }
+        case APP_STATE_STARTED: {
+          removeClass(hovering__stateAppInitial, 'hovering__state--selected');
+          addClass(hovering__stateAppStarted, 'hovering__state--selected');          
+          removeClass(hovering__stateAppEnded, 'hovering__state--selected');
+          break;
+        }
+        case APP_STATE_ENDED: {
+          removeClass(hovering__stateAppInitial, 'hovering__state--selected');
+          removeClass(hovering__stateAppStarted, 'hovering__state--selected');          
+          addClass(hovering__stateAppEnded, 'hovering__state--selected');
+          break;
+        }
+        default: {
+          throw new Error('setAppState - state incorrect');
+        }
+      }
     };
 
     function setHoverState(state) {
       appHover = state;
-      hovering__stateBUTTON.textContent = 'Hovering: ' + state;
+      hovering__stateBUTTON.textContent = state ? 'Hovering' : 'Not Hovering';
     };
     
   </script>
