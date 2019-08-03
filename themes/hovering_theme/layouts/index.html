@@ -14,7 +14,7 @@
             <span class="mobile__span"></span>
           </div>
             
-          <div class="articles__link hovering__information__container">
+          <div id="hovering__information__container" class="articles__link hovering__information__container">
             <div class="hovering__state__container">
               <h4>State</h4>
               <div class="hovering__state--app"> 
@@ -39,7 +39,7 @@
         <div class="hovering__center">
           <div class="hovering__toast__container">
             <div id="hovering__toast__text" class="hovering__toast__text">
-
+              Your first minute.
             </div>
           </div>
 
@@ -73,7 +73,9 @@
     // You can input a time. 
     // Timed. Non-timed. 
 
-    // selectors
+    // selectors 
+    var hovering__toast__text = document.querySelector('#hovering__toast__text');
+    var hovering__information__container = document.querySelector('#hovering__information__container');
     var hovering__button__container = document.querySelector('#hovering__button__container');
     var hovering__button__text = document.querySelector('#hovering__button__text');
     var hovering__button = document.querySelector('#hovering__button');
@@ -110,6 +112,7 @@
     // scale state
     var scaleState = INITIAL_SCALE_STATE;
     var increasingScale = true;
+    var fadeTimer = 0;
 
     // events
     document.addEventListener('keydown', function(event) {
@@ -124,6 +127,8 @@
       switch(appState) {
         case APP_STATE_INITIAL: {
           if (appHover !== true) return;
+          addClass(hovering__information__container, 'fade__element');
+          addClass(hovering__message, 'fade__element');
         
           timerSetInterval = setInterval(startTimer, 1000);
           sizeSetInterval = setInterval(increaseSize, 100);
@@ -170,6 +175,7 @@
           break;
         }
         case APP_STATE_ENDED: {
+          setInnerText(hovering__timer, fancyTimeFormat(0));
           hovering__button.style.transform = 'scale(' + INITIAL_SCALE_STATE + ')';
           scaleState = INITIAL_SCALE_STATE;
           break;
@@ -197,6 +203,7 @@
           break;
         }
         case APP_STATE_ENDED: {
+          setInnerText(hovering__timer, fancyTimeFormat(0));
           hovering__button.style.transform = 'scale(' + INITIAL_SCALE_STATE + ')';
           scaleState = INITIAL_SCALE_STATE;
           break;
@@ -208,13 +215,15 @@
     }
 
     function endHovering() {
+      removeClass(hovering__information__container, 'fade__element');
+      removeClass(hovering__message, 'fade__element');
+
       setInnerText(
         hovering__message,
         '<p>Your session has ended. Press space to restart and try again!</p>' +
-        '<p>You hovered for ' + fancyTimeFormat(timer) + '</p>'
+        '<p>You hovered for ' + fancyTimeFormat(timer) + ' minutes.</p>'
       );
       timer = 0;
-      setInnerText(hovering__timer, fancyTimeFormat(0))
 
       clearInterval(timerSetInterval);
       clearInterval(sizeSetInterval);
@@ -235,6 +244,7 @@
         );
       }
 
+      setInnerText(hovering__timer, fancyTimeFormat(0));
       hovering__button.style.transform = 'scale(' + INITIAL_SCALE_STATE + ')';
       scaleState = INITIAL_SCALE_STATE;
 
@@ -243,10 +253,18 @@
  
     function startTimer(event) {
       timer += 1;
+      fadeTimer -= 1;
       setInnerText(hovering__timer, fancyTimeFormat(timer))
       
-      if (timer % 60) {
-        
+      if (fadeTimer === 0) {
+        removeClass(hovering__toast__text, 'fade__element');
+      }
+
+      if (timer % 60 === 0) {
+        fadeTimer = 7;
+        var minutes = timer / 60;
+        addClass(hovering__toast__text, 'fade__element');
+        setInnerText(hovering__toast__text, 'You reached ' + minutes === 1 ? minutes + ' minutes' : minutes + ' minute.');
       }
     }
 
