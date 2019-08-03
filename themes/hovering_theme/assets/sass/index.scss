@@ -107,13 +107,21 @@
 }
 
 .hovering__toast__container {
-  position: absolute;
+  display: none;
 
+  position: absolute;
   top: -6rem;
+
   left: 50%;
-  transform: translateX(-50%); 
+  transform: translateX(-50%);
+
+  padding: 1rem;
+  // background: rgb(218, 218, 218);
+  // border: 2px solid cyan;
+  // box-shadow: -5px 5px 0px 0px black;
+
   .hovering__toast__text {
-    display: none;
+    color: black;
   }
 
 }
@@ -192,9 +200,8 @@
 
 .fade__element {
   display: block!important;
-  animation: fading 8s forwards;
-  animation-timing-function: ease-in;
-
+  animation: fading 10s forwards;
+  // animation-timing-function: ease-in;
 }
 
 @keyframes fading {

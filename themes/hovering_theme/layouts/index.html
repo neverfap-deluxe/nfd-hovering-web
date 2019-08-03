@@ -33,7 +33,6 @@
             </div>
           </div>      
         </div>
-
           
         <!-- HOVERING BUTTON -->
         <div class="hovering__center">
@@ -43,9 +42,9 @@
             <div id="hovering__button__text" class="hovering__button__text">hover</div>
           </div>
 
-          <div class="hovering__toast__container">
+          <div id="hovering__toast__container" class="hovering__toast__container">
             <div id="hovering__toast__text" class="hovering__toast__text">
-              Your first minute.
+              Your reached 1 minute.
             </div>
           </div>
   
@@ -74,6 +73,7 @@
     // Timed. Non-timed. 
 
     // selectors 
+    var hovering__toast__container = document.querySelector('#hovering__toast__container');
     var hovering__toast__text = document.querySelector('#hovering__toast__text');
     var hovering__information__container = document.querySelector('#hovering__information__container');
     var hovering__button__container = document.querySelector('#hovering__button__container');
@@ -136,8 +136,8 @@
           setInnerText(
             hovering__message, 
             '<p>Leave your cursor stationary within the circle, with your hand still attached.</p>' +
-            '<p>I recommend you practice for 10 minutes at a time.</p>' +
-            '<p>The app will prompt you at minute intervals.</p>'
+            '<p>The app will prompt you at minute intervals.</p>' +
+            '<p>I recommend practicing for 10 minutes.</p>'
           );
 
           setAppState(APP_STATE_STARTED);        
@@ -222,7 +222,7 @@
       setInnerText(
         hovering__message,
         '<p>Your session has ended. Press space to restart and try again!</p>' +
-        '<p>You hovered for ' + fancyTimeFormat(timer) + ' minutes.</p>'
+        '<p>You hovered for ' + fancyTimeFormat(timer) + '.</p>'
       );
       timer = 0;
 
@@ -258,14 +258,14 @@
       setInnerText(hovering__timer, fancyTimeFormat(timer))
       
       if (fadeTimer === 0) {
-        removeClass(hovering__toast__text, 'fade__element');
+        removeClass(hovering__toast__container, 'fade__element');
       }
 
       if (timer % 60 === 0) {
         fadeTimer = 7;
         var minutes = timer / 60;
-        addClass(hovering__toast__text, 'fade__element');
-        setInnerText(hovering__toast__text, 'You reached ' + minutes === 1 ? minutes + ' minutes' : minutes + ' minute.');
+        addClass(hovering__toast__container, 'fade__element');
+        setInnerText(hovering__toast__text, 'You reached ' + minutes === 1 ? minutes + ' minutes' : minutes + ' minute');
       }
     }
 
