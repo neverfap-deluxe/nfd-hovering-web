@@ -167,6 +167,21 @@
   padding-left: 1rem;
   padding-right: 1rem;
 
+  .question__mark__link {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: black;
+
+    i {
+      font-size: 1.1rem;
+      transition: .2s;
+    }
+    i:hover {
+      color: rgb(121, 121, 121);
+    }
+  }
+
   h4 {
     margin: 0.2rem!important;
     text-decoration: underline;
@@ -196,7 +211,6 @@
   .hovering__what__is {
   }
 }
-
 
 .fade__element {
   display: block!important;
