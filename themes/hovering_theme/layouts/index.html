@@ -266,7 +266,7 @@
         fadeTimer = 7;
         var minutes = timer / 60;
         addClass(hovering__toast__container, 'fade__element');
-        setInnerText(hovering__toast__text, 'You reached ' + minutes === 1 ? minutes + ' minutes' : minutes + ' minute');
+        setInnerText(hovering__toast__text, 'You reached ' + (minutes === 1 ? minutes + ' minute' : minutes + ' minutes'));
       }
     }
 
